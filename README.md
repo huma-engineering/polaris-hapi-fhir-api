@@ -1,3 +1,6 @@
+# Announcement :loudspeaker: 
+
+This repository is transferred from [gdm-SynseneHealth](https://github.com/sensynehealth/polaris-hapi-fhir-api) to Huma organisation as part of change in asset ownership 
 # HAPI-FHIR Starter Project, Sensyne Health edition
 
 This project was initially cloned from [the original HAPI FHIR JPA Server Starter repo](https://github.com/hapifhir/hapi-fhir-jpaserver-starter) and is a "custom" version of it.  
