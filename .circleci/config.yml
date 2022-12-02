@@ -1,11 +1,11 @@
-GCP_DOCKER_AUTH_MASTER:
+ACR_DOCKER_AUTH_MASTER: &ACR_DOCKER_AUTH
   auth:
-    username: _json_key
-    password: ${GOOGLE_AUTH}
+    username: humagdmacr
+    password: ${ACR_PASSWORD}
+
 version: 2.1
 orbs:
   azure-acr: circleci/azure-acr@0.1.4
-  ms-teams: cloudradar-monitoring/ms-teams@0.0.1
   maven: circleci/maven@1.1
 jobs:
 
@@ -53,10 +53,8 @@ jobs:
 
   deploy-dev:
     docker:
-    - image: gcr.io/dhos-stack/circleci-build-image:latest
-      auth:
-        username: _json_key
-        password: ${GOOGLE_AUTH}
+    - image: humagdmacr.azurecr.io/she/circleci-build-image
+      <<: *ACR_DOCKER_AUTH
     environment:
       K8S_DEV_DEPLOYMENT_NAME: deployment/dhos-hapi-fhir-api-dep
       ACR_REPO_BASE: dhos
@@ -81,9 +79,6 @@ jobs:
     - run:
         name: Deploy to Azure dev environment
         command: .circleci/deploy_azure_dev.sh
-    - ms-teams/report:
-        only_on_fail: true
-        webhook_url: ${MSTEAMS_NOTIFY_WEBHOOK_URL}
 
 workflows:
   version: 2
