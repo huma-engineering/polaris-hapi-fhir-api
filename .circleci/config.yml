@@ -1,5 +1,5 @@
 ACR_DOCKER_AUTH_MASTER: &ACR_DOCKER_AUTH
-  image: ${AZURE_LOGIN_SERVER_NAME}/she/dhos-hapi-fhir-api
+  image: ${AZURE_LOGIN_SERVER_NAME}/she/circleci-build-image
   auth:
     username: ${ACR_REGISTRY_NAME}
     password: ${ACR_PASSWORD}
