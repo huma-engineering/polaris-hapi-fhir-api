@@ -17,8 +17,8 @@ jobs:
         uses: actions/cache@v3
         with:
           path: '**/.m2'
-          key: v1-poetry-deps-${{ hashFiles('**/pom.xml') }}
-          restore-keys: v1-poetry-deps-
+          key: v1-maven-dependencies-${{ hashFiles('**/pom.xml') }}
+          restore-keys: v1-maven-dependencies-
       - name: Verify and run HAPI FHIR integration tests
         run: mvn clean verify -f "pom.xml"
       - name: Archive test results
