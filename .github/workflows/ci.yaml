@@ -46,7 +46,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.ACR_REPO_BASE }}/gdm-bg-readings-api
+          images: ${{ env.REGISTRY }}/${{ env.ACR_REPO_BASE }}/dhos-hapi-fhir-api
           tags: |
             type=raw,value=dev
             type=sha
