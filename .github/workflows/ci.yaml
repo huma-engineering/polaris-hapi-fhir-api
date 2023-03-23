@@ -1,0 +1,55 @@
+name: CI
+
+on: [workflow_dispatch, push, pull_request]
+
+jobs:
+  test:
+    name: Verify
+    runs-on: ubuntu-latest
+    container: maven:3.8-openjdk-18-slim
+    steps:
+      - uses: actions/checkout@v3
+      - name: Cache java dependencies
+        uses: actions/cache@v3
+        with:
+          path: '**/.m2'
+          key: v1-maven-dependencies-${{ hashFiles('**/pom.xml') }}
+          restore-keys: v1-maven-dependencies-
+      - name: Verify and run HAPI FHIR integration tests
+        run: mvn clean verify -f "pom.xml"
+      - name: Archive test results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-results
+          path: target/failsafe-reports
+
+  build_and_push:
+    name: Build and push
+    needs: [test]
+    if: ${{ github.ref == 'refs/heads/develop' }}
+    runs-on: ubuntu-latest
+    env:
+      GHCR_REPO_BASE: huma-engineering/dhos
+    steps:
+      - uses: actions/checkout@v3
+      - name: Log in to the GitHub Packages
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.GHCR_REPO_BASE }}/dhos-hapi-fhir-api
+          tags: |
+            type=raw,value=dev
+            type=sha
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
