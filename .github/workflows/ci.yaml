@@ -29,6 +29,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/develop' }}
     runs-on: ubuntu-latest
     env:
+      REGISTRY: ghcr.io
       GHCR_REPO_BASE: huma-engineering/dhos
     steps:
       - uses: actions/checkout@v3
